@@ -50,18 +50,22 @@ def newConnections(socket):
         print("New connection at ID " + str(connections[len(connections) - 1]))
         total_connections += 1
 
-def main():
-    #Get host and port
-    host = input("Host: ")
-    port = int(input("Port: "))
+#Get host
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+host = (s.getsockname()[0])
+print('Host: ' + host)
+s.close()
 
-    #Create new server socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((host, port))
-    sock.listen(5)
+#Get port
+port = int(input("Port: "))
 
-    #Create new thread to wait for connections
-    newConnectionsThread = threading.Thread(target = newConnections, args = (sock,))
-    newConnectionsThread.start()
+#Create new server socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((host, port))
+sock.listen(5)
+
+#Create new thread to wait for connections
+newConnectionsThread = threading.Thread(target = newConnections, args = (sock,))
+newConnectionsThread.start()
     
-main()
